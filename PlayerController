@@ -1,24 +1,22 @@
-public float moveSpeed = 2.0f;
+    public float moveSpeed;
+    public CharacterController Controller;
+    private Vector3 moveDirection;
+    public float gravityScale;//So gravity can be simply edited on the fly. I recommend 0.5 for now
+    
+    void Start()
+    {
+        Controller = GetComponent<CharacterController>();//Using built in player controller for now. We can change this later if need be
+    }
 
-public Rigidbody rigidbody;
-public Animator animator;
-
-Vector3 movement;
-
-void Update()
-{
-  movement.z = Input.GetRawAxis("Horizontal");
-  movement.y = Input.GetRawAxis("Vertical");
-  
-  animator.SetFloat("Horizontal", movement.z);
-  animator.SetFloat("Vertical", movement.y);
-  animator.SetFloat("Speed", movement.sqrMagnitude);
-}
-
-void FixedUpdate()
-{
-  rigidbody.MovePosition(rigidbody + movement * moveSpeed * Time.fixedDeltaTime);
-}
+    
+    void Update()
+    {
+        moveDirection = new Vector3(Input.GetAxis("Horizontal") * moveSpeed, 0f, Input.GetAxis("Vertical") * moveSpeed);
+        
+        moveDirection.y = moveDirection.y + (Physics.gravity.y * gravityScale);// le gravity
+        Controller.Move(moveDirection  * Time.deltaTime);
+        
+    }
 
 
 
